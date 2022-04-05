@@ -226,3 +226,17 @@ UMABackend._register_config({"partitioning.enable_MergeCompilerRegions": False})
 UMABackend.self._register_pattern()
 ```
 TODO
+
+
+### Implementation Details 
+
+#### Target Registration
+
+Target registration is currently implemented from the python side by calling a target registration PackedFunction `relay.backend.contrib.uma.RegisterTarget`. This function implements a Python callable version of:
+
+```
+TVM_REGISTER_TARGET_KIND("target_name", kDLCPU)
+    .set_attr<Bool>("use_device_api", Bool(true))
+    .set_attr<FTVMRelayToTIR>("RelayToTIR", relay::contrib::uma::RelayToTIR("target_name"))
+    .set_attr<FTVMTIRToRuntime>("TIRToRuntime", relay::contrib::uma::TIRToRuntime("target_name"));
+```
